@@ -1,10 +1,17 @@
 version: '3.8'
 
 services:
-  php:
-    build:
-      context: .
+  app:
+    image: php:8.2-fpm
     volumes:
-      - .:/app
-    working_dir: /app
-    command: php 01-basics/index.php
+      - ./src:/var/www/html
+
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
